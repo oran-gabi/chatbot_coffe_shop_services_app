@@ -12,7 +12,11 @@ const firebaseConfig = {
     measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID as string
   };
 
+  console.log("HEREEEEEEEEEEEEEEEEE")
+  console.log(firebaseConfig)
+
+
   const app = initializeApp(firebaseConfig);
   const fireBaseDB =getDatabase(app);
 
-  export {fireBaseDB}
+  export { fireBaseDB, firebaseConfig };

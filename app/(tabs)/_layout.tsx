@@ -1,58 +1,54 @@
-import {  Text, View } from 'react-native'
 import React from 'react'
-import { Tabs } from 'expo-router'
+import {Tabs} from 'expo-router'
 import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-
-
-
+import { FontAwesome6 } from '@expo/vector-icons';
 
 const TabsLayout = () => {
   return (
-<>
-  <Tabs
-    screenOptions={{
-      tabBarActiveTintColor: "#f5e343"
-
-
+    <>
+      <Tabs
+        screenOptions={{
+      tabBarActiveTintColor: "#f5e343",
+      headerShown: false  // Add this to ensure consistent header behavior
     }}
-  >
-    <Tabs.Screen
+    >
+      <Tabs.Screen 
         name='home'
         options={{
           headerShown: false,
-          title: 'home',
+          title: 'Home',
           tabBarIcon: ({color}) => (
             <Entypo name="home" size={24} color={color} />
           )
         }}
       />
-    <Tabs.Screen
+
+      <Tabs.Screen 
         name='chatRoom'
         options={{
           headerShown: true,
+          tabBarStyle: { display: 'none' },
           title: 'Chat Bot',
-          tabBarStyle: {'display':'none'},
-          tabBarIcon: ({color}) => (
+          tabBarIcon: ({color }) => (
             <FontAwesome6 name="robot" size={24} color={color} />
           )
         }}
-        />
-    <Tabs.Screen
+      />
+
+  <Tabs.Screen 
         name='order'
         options={{
           headerShown: true,
+          tabBarStyle: { display: 'none' },
           title: 'Cart',
-          tabBarStyle: {'display':'none'},
           tabBarIcon: ({color}) => (
-            <Entypo name="shopping-cart" size={24} color={color} />           )
+            <Entypo name="shopping-cart" size={24} color={color} />
+          )
         }}
-      />         
-
-     </Tabs>
-    </>
-  )
+      />
+    </Tabs>
+  </>
+)
 }
 
 export default TabsLayout
-
