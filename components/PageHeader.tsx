@@ -10,7 +10,7 @@ interface HeaderProps {
     bgColor:string;
 }
 
-const PageHeader: React.FC<HeaderProps> = ({ title, showHeaderRight,bgColor }) => {
+const PageHeader: React.FC<HeaderProps> = ({ title, showHeaderRight, bgColor }) => {
     return (
         <Stack.Screen
             options={{

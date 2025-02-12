@@ -1,77 +1,73 @@
-import { Text, View,Image, FlatList, StatusBar   } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Product } from '@/types/types'
-import { fetchProducts } from '@/services/productService';
-import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, View,TouchableOpacity, ScrollView, StatusBar  } from 'react-native'
+import React from 'react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { router } from 'expo-router'
+import { useLocalSearchParams } from "expo-router";
+import PageHeader from '@/components/PageHeader';
+import { useCart } from '@/components/CartContext';
+import Toast from 'react-native-root-toast';
+import DescriptionSection from '@/components/DescriptionSection';
+import SizesSection from '@/components/SizesSection';
+import DetailsHeader from '@/components/DetailsHeader';
 
-const Home = () => {
-    const [products, setProducts] =useState<Product[]>([]);
-    const [loading, setLoading] =useState<boolean>(true);
+const DetailsPage = () => {
+  const { addToCart } = useCart();
 
-    useEffect(() => {
-        const loadProducts = async () => {
-            try {
-              const productsData = await fetchProducts();
-              setProducts(productsData);
-            } catch(err) {
-                console.log(err);
-            }finally{
-                setLoading(false);
-            }
-
-        }
-
-        loadProducts();
-
-    }
-    ,[])
-
-    if (loading) return <Text> Loading ...</Text>
+  const { name, image_url, type, description, price, rating } = useLocalSearchParams() as { name: string, image_url: string, type: string, description: string, price: string, rating: string };
+  
+  const buyNow = () => {
+    addToCart(name, 1);
+    Toast.show(`${name} added to cart`, {
+      duration: Toast.durations.SHORT,
+    });
+    router.back();
+  };
 
   return (
-    <GestureHandlerRootView>
-      <SafeAreaView
-        className='w-full h-full'>
-        <FlatList 
-            horizontal={false}
-            columnWrapperStyle={{ justifyContent: 'space-between', marginLeft: 15, marginRight: 15 }}
-            numColumns={2} 
-            keyExtractor={(item, index) => index.toString()}
-            data= {products}
+    <GestureHandlerRootView
+      className='bg-[#F9F9F9] w-full h-full'
+    >
+      <StatusBar backgroundColor="white" />
 
-        renderItem={({item}) => (
-            <View 
-            className='w-[48%] mt-2 bg-white rounded-2xl p-2 flex justify-between'>
-                
-                <TouchableOpacity>
-                <Image 
-                    source= {{ uri: item.image_url}}
-                    className='w-full h-32 rounded-2xl'
-                  />
-                  <Text
-                    className="text-[#242424] text-lg font-[Sora-SemiBold] ml-1 mt-2"
-                  >{item.name}
-                  </Text>
-                  <Text
-                    className="text-[#A2A2A2] text-sm font-[Sora-Regular] ml-1 mt-1"
-                  >{item.category}
-                  </Text>
-                </TouchableOpacity>
-
+      <PageHeader title="Detail" showHeaderRight={true} bgColor='#F9F9F9' />
+      
+      <View className='h-full flex-col justify-between'>
+        <ScrollView>
+            <View className='mx-5 items-center'>
+              <DetailsHeader image_url={image_url} name={name} type={type} rating={Number(rating)} />
+              <DescriptionSection description={description} />
+              <SizesSection />
             </View>
-
-
-
-        )}
-
-        />
-        <Text>
-        Home
-        </Text>
-    </SafeAreaView>
+        </ScrollView>
+        
+        <View
+          className='flex-row justify-between bg-white rounded-tl-3xl rounded-tr-3xl px-6 pt-3 pb-6'
+        > 
+          <View>
+            <Text
+                    className="text-[#A2A2A2] text-base font-[Sora-Regular] pb-3"
+              >Price
+            </Text>
+            <Text
+                    className="text-app_gold_color text-2xl font-[Sora-SemiBold]"
+              >$ {price}
+            </Text>
+          </View>
+            
+          <TouchableOpacity 
+                className="bg-app_gold_color w-[70%] rounded-3xl items-center justify-center" 
+                onPress = {buyNow}
+              >
+                <Text className="text-xl color-white font-[Sora-Regular]">Buy Now</Text> 
+          </TouchableOpacity> 
+        
+        </View>
+        
+      </View>
+      
+        
     </GestureHandlerRootView>
   )
 }
 
-export default Home
+export default DetailsPage
